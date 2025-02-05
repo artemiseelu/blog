@@ -55,6 +55,7 @@ resume_data_cn = {
             {
                 'name': '企业资源管理系统',
                 'period': '2021-2022',
+                'link': 'https://github.com/artemiseelu/blog',
                 'description': '使用Django开发的企业级管理系统，\
                               包含人事、财务、库存等模块',
                 'technologies': ['Python', 'Django', 'Vue.js', 'PostgreSQL'],
