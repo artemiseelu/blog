@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}博客网站{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2d3436;
+            --accent-color: #6c5ce7;
+            --text-color: #2d3436;
+            --light-bg: #f5f6fa;
+            --transition: all 0.3s ease;
+            --header-height: 60px;  /* 根据实际页眉高度调整 */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            color: var(--text-color);
+            background: var(--light-bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            z-index: 1000;
+            height: var(--header-height);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            letter-spacing: -1px;
+        }
+
+        .main-content {
+            margin-top: 80px;
+            flex: 1;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5849c2;
+        }
+
+        .btn-secondary {
+            background: #e9ecef;
+            color: var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: #dee2e6;
+        }
+
+        .footer {
+            background: white;
+            padding: 2rem;
+            text-align: center;
+            color: #636e72;
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--accent-color);
+        }
+
+        .lang-switch {
+            background: none;
+            border: 1.5px solid var(--accent-color);
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            color: var(--accent-color);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .lang-switch:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        /* 语言切换按钮样式 */
+        .language-switch {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-left: 1rem;
+        }
+
+        .lang-btn {
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            color: #333;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .lang-btn.active {
+            background: #e0e0e0;
+            font-weight: 500;
+        }
+
+        /* 确保在移动设备上也能正常显示 */
+        @media (max-width: 768px) {
+            .language-switch {
+                margin-left: 0;
+                margin-top: 0.5rem;
+            }
+        }
+
+        {% block extra_css %}{% endblock %}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="/" class="logo">Arte</a>
+            <div class="nav-links">
+                <a href="{% url 'home' %}" class="nav-link">首页</a>
+                <a href="{% url 'article_list' %}" class="nav-link">文章</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'article_upload' %}" class="nav-link">发布文章</a>
+                {% endif %}
+                <a href="{% url 'resume' %}" class="nav-link">简历</a>
+                <div class="language-switch">
+                    <a href="?lang=cn" class="lang-btn {% if request.GET.lang == 'cn' or not request.GET.lang %}active{% endif %}">中文</a>
+                    <a href="?lang=en" class="lang-btn {% if request.GET.lang == 'en' %}active{% endif %}">EN</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>© 2024 Emma | artemiseelu@gmail.com</p>
+        <!-- <p>浙ICP备XXXXXXXX号</p> -->
+    </footer>
+
+
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html> 

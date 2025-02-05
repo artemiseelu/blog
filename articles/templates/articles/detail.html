@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ article.title }} - Arte{% endblock %}
+
+{% block extra_css %}
+<style>
+    .article-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    .article-header {
+        padding: 2rem;
+        text-align: center;
+        border-bottom: 1px solid #eee;
+    }
+
+    .article-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        line-height: 1.2;
+    }
+
+    .article-meta {
+        color: #636e72;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .article-image {
+        width: 100%;
+        max-height: 400px;
+        object-fit: cover;
+    }
+
+    .article-content {
+        padding: 2rem;
+        line-height: 1.8;
+        color: #2d3436;
+    }
+
+    .article-actions {
+        padding: 1rem 2rem;
+        border-top: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .related-articles {
+        margin-top: 2rem;
+        padding: 2rem;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .related-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--primary-color);
+    }
+
+    .related-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    .related-item {
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+        transition: var(--transition);
+    }
+
+    .related-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    @media (max-width: 768px) {
+        .article-title {
+            font-size: 2rem;
+        }
+
+        .article-container {
+            margin: 0 1rem;
+        }
+
+        .article-content {
+            padding: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <article class="article-container">
+        <header class="article-header">
+            <h1 class="article-title">{{ article.title }}</h1>
+            <div class="article-meta">
+                <span>作者: {{ article.author.username }}</span> |
+                <span>发布于: {{ article.published_time|date:"Y-m-d H:i" }}</span> |
+                <span>分类: {{ article.category.name }}</span> |
+                <span>浏览: {{ article.views }}</span>
+            </div>
+        </header>
+
+        {% if article.featured_image %}
+        <img src="{{ article.featured_image.url }}" class="article-image" alt="{{ article.title }}">
+        {% endif %}
+
+        <div class="article-content">
+            {{ article.content|safe|linebreaks }}
+        </div>
+
+        <div class="article-actions">
+            {% if user == article.author %}
+            <div>
+                <a href="{% url 'article_edit' article.slug %}" class="btn btn-primary">编辑</a>
+                <a href="{% url 'article_delete' article.slug %}" class="btn btn-danger">删除</a>
+            </div>
+            {% endif %}
+            <a href="{% url 'article_list' %}" class="btn btn-secondary">返回列表</a>
+        </div>
+    </article>
+
+    {% if related_articles %}
+    <div class="related-articles">
+        <h2 class="related-title">相关文章</h2>
+        <div class="related-list">
+            {% for related in related_articles %}
+                {% if related.slug %}  {# 只显示有slug的文章 #}
+                <a href="{% url 'article_detail' related.slug %}" class="related-item">
+                    <h3>{{ related.title }}</h3>
+                    <small>{{ related.published_time|date:"Y-m-d" }}</small>
+                </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

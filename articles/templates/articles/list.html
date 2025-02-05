@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+
+{% block title %}文章列表 - Arte{% endblock %}
+
+{% block extra_css %}
+<style>
+    .article-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .article-header h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+
+    .filter-section {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .article-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .article-card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .article-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 15px 15px 0 0;
+    }
+
+    .article-content {
+        padding: 1.5rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .article-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--primary-color);
+    }
+
+    .article-meta {
+        font-size: 0.875rem;
+        color: #636e72;
+        margin-bottom: 1rem;
+    }
+
+    .article-summary {
+        color: #636e72;
+        margin-bottom: 1.5rem;
+        flex-grow: 1;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 2rem;
+    }
+
+    .page-link {
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        background: white;
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: var(--transition);
+    }
+
+    .page-link:hover, .page-link.active {
+        background: var(--accent-color);
+        color: white;
+    }
+
+    .filter-form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: flex-end;
+    }
+
+    .filter-form p {
+        margin: 0;
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .filter-form label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #636e72;
+        font-size: 0.9rem;
+    }
+
+    .filter-form .form-control {
+        width: 100%;
+        padding: 0.5rem 1rem;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .filter-form .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.1);
+    }
+
+    .filter-form button {
+        padding: 0.5rem 2rem;
+        height: 38px;
+        white-space: nowrap;
+    }
+
+    .filter-form .date-range {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .article-header h1 {
+            font-size: 2rem;
+        }
+        
+        .article-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .filter-form {
+            flex-direction: column;
+        }
+        
+        .filter-form p {
+            width: 100%;
+        }
+        
+        .filter-form button {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="article-header">
+        <h1>文章列表</h1>
+    </div>
+
+    <div class="filter-section">
+        <form method="get" class="filter-form">
+            <p>
+                <label for="{{ filter_form.search.id_for_label }}">搜索</label>
+                {{ filter_form.search }}
+            </p>
+            <p>
+                <label for="{{ filter_form.category.id_for_label }}">分类</label>
+                {{ filter_form.category }}
+            </p>
+            {% if is_authenticated %}
+            <p>
+                <label for="{{ filter_form.status.id_for_label }}">状态</label>
+                {{ filter_form.status }}
+            </p>
+            {% endif %}
+            <div class="date-range">
+                <p>
+                    <label for="{{ filter_form.date_from.id_for_label }}">开始日期</label>
+                    {{ filter_form.date_from }}
+                </p>
+                <p>
+                    <label for="{{ filter_form.date_to.id_for_label }}">结束日期</label>
+                    {{ filter_form.date_to }}
+                </p>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i> 筛选
+            </button>
+        </form>
+    </div>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="article-grid">
+        {% for article in articles %}
+        <div class="card article-card">
+            {% if article.featured_image %}
+            <img src="{{ article.featured_image.url }}" class="article-image" alt="{{ article.title }}">
+            {% endif %}
+            <div class="article-content">
+                <h2 class="article-title">{{ article.title }}</h2>
+                <div class="article-meta">
+                    {{ article.published_time|date:"Y-m-d" }} | 
+                    浏览: {{ article.views }} | 
+                    分类: {{ article.category.name }}
+                    {% if is_authenticated %}
+                    | 状态: {{ article.get_status_display }}
+                    {% endif %}
+                </div>
+                <p class="article-summary">{{ article.summary|truncatewords:30 }}</p>
+                {% if article.slug %}
+                    <a href="{% url 'article_detail' article.slug %}" class="btn btn-primary">阅读更多</a>
+                {% else %}
+                    <span class="text-danger">缺少 URL 标识符</span>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="text-center">
+            <p>暂无文章</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if articles.has_other_pages %}
+    <div class="pagination">
+        {% include "articles/includes/pagination.html" %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

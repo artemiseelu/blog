@@ -1,0 +1,334 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}个人简历2 - Arte{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+    body {
+        margin: 0;
+        font-family: 'Arial', sans-serif;
+        background: #f5f5f5;
+    }
+
+    .resume-wrapper {
+        max-width: 1200px;
+        margin: 2rem auto;
+        display: flex;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        min-height: calc(100vh - 4rem);  /* 减去上下margin */
+    }
+
+    /* 左侧栏样式 */
+    .sidebar {
+        width: 300px;
+        background: #2c3e50;
+        color: white;
+        padding: 2rem;
+    }
+
+    .profile-section {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .avatar {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        margin: 0 auto 1.5rem;
+        display: block;
+        object-fit: cover;
+        border: 3px solid #3498db;
+        box-shadow: 0 0 15px rgba(52, 152, 219, 0.3);
+    }
+
+    .name {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+        color: #fff;
+    }
+
+    .title {
+        color: #bdc3c7;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .skills-section {
+        margin-bottom: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .skills-section h2 {
+        color: #3498db;
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+    }
+
+    .skill-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .skill-tag {
+        background: #34495e;
+        padding: 0.5rem 1rem;
+        border-radius: 3px;
+        font-size: 0.9rem;
+    }
+
+    .contact-section {
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .contact-section h2 {
+        color: #3498db;
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+    }
+
+    .contact-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.8rem;
+        color: #ecf0f1;
+        padding: 0.5rem;
+        transition: background-color 0.3s;
+    }
+
+    .contact-item:hover {
+        background: rgba(52, 152, 219, 0.1);
+        border-radius: 4px;
+    }
+
+    .contact-item i {
+        width: 20px;
+        margin-right: 10px;
+        color: #3498db;
+    }
+
+    /* 主内容区域样式 */
+    .main-content {
+        flex: 1;
+        background: white;
+        padding: 2rem 3rem;
+    }
+
+    .section {
+        margin-bottom: 2.5rem;
+    }
+
+    .section:last-child {
+        margin-bottom: 0;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        color: #2c3e50;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #3498db;
+    }
+
+    .experience-item {
+        margin-bottom: 1.5rem;
+        padding-left: 1.5rem;
+        border-left: 2px solid #ecf0f1;
+        position: relative;
+    }
+
+    .experience-item::before {
+        content: '';
+        position: absolute;
+        left: -5px;
+        top: 0;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #3498db;
+    }
+
+    .experience-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+    }
+
+    .company-name {
+        font-weight: bold;
+        color: #2c3e50;
+        font-size: 1.1rem;
+    }
+
+    .period {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+    }
+
+    .job-title {
+        color: #34495e;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .description {
+        color: #666;
+        line-height: 1.6;
+        font-size: 0.95rem;
+    }
+
+    .project-item {
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .project-title {
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 0.8rem;
+        font-size: 1.1rem;
+    }
+
+    .tech-stack {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .tech-tag {
+        background: #e9ecef;
+        color: #2c3e50;
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+    }
+
+    .contact-link {
+        color: #ecf0f1;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .contact-link:hover {
+        color: #3498db;
+    }
+
+    @media (max-width: 768px) {
+        .resume-wrapper {
+            flex-direction: column;
+            margin: 0;
+        }
+
+        .sidebar {
+            width: auto;
+        }
+
+        .main-content {
+            padding: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="resume-wrapper">
+    <aside class="sidebar">
+        <div class="profile-section">
+            <img src="{% static personal_info.avatar %}" alt="{{ personal_info.name }}" class="avatar">
+            <h1 class="name">{{ personal_info.name }}</h1>
+            <div class="title">{{ personal_info.title }}</div>
+        </div>
+
+        <div class="skills-section">
+            <h2>{{ sections.skills }}</h2>
+            <div class="skill-tags">
+                {% for skill in skills %}
+                <span class="skill-tag">{{ skill.name }}</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="contact-section">
+            <h2>{{ sections.contact }}</h2>
+            <div class="contact-item">
+                <i class="fas fa-envelope"></i>
+                <span>{{ personal_info.email }}</span>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-phone"></i>
+                <span>{{ personal_info.phone }}</span>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>{{ personal_info.location }}</span>
+            </div>
+            <div class="contact-item">
+                <i class="fab fa-github"></i>
+                <a href="https://{{ personal_info.github }}" target="_blank" class="contact-link">{{ personal_info.github }}</a>
+            </div>
+            <div class="contact-item">
+                <i class="fab fa-linkedin"></i>
+                <a href="https://www.linkedin.com/in/jiaxing-lu-6a0a16b4/" target="_blank" class="contact-link">{{ personal_info.linkedin }}</a>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <section class="section">
+            <h2 class="section-title">{{ sections.about }}</h2>
+            <p class="description">{{ personal_info.summary }}</p>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">{{ sections.experience }}</h2>
+            {% for exp in experience %}
+            <div class="experience-item">
+                <div class="experience-header">
+                    <span class="company-name">{{ exp.company }}</span>
+                    <span class="period">{{ exp.period }}</span>
+                </div>
+                <div class="job-title">{{ exp.title }}</div>
+                <p class="description">{{ exp.description }}</p>
+            </div>
+            {% endfor %}
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">{{ sections.projects }}</h2>
+            {% for project in projects %}
+            <div class="project-item">
+                <div class="project-title">{{ project.name }}</div>
+                <p class="description">{{ project.description }}</p>
+                <div class="tech-stack">
+                    {% for tech in project.technologies %}
+                    <span class="tech-tag">{{ tech }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">{{ sections.education }}</h2>
+            {% for edu in education %}
+            <div class="experience-item">
+                <div class="experience-header">
+                    <span class="company-name">{{ edu.school }}</span>
+                    <span class="period">{{ edu.period }}</span>
+                </div>
+                <div class="job-title">{{ edu.degree }}</div>
+                <p class="description">{{ edu.description }}</p>
+            </div>
+            {% endfor %}
+        </section>
+    </main>
+</div>
+{% endblock %} 

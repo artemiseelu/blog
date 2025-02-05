@@ -1,0 +1,16 @@
+-- 在 psql 命令行中执行
+DROP DATABASE blog_db;
+CREATE DATABASE blog_db;
+
+# 删除 migrations 文件夹中除 __init__.py 外的所有文件
+del articles\migrations\0*.py
+
+python manage.py makemigrations
+
+python manage.py migrate
+
+python manage.py createsuperuser
+
+python manage.py shell
+
+python manage.py runserver

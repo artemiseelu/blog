@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}删除文章 - Arte{% endblock %}
+
+{% block extra_css %}
+<style>
+    .delete-container {
+        max-width: 500px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .delete-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+
+    .delete-message {
+        color: #636e72;
+        margin-bottom: 2rem;
+    }
+
+    .article-title {
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+
+    .delete-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+    }
+
+    .btn-danger {
+        background: #e74c3c;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background: #c0392b;
+    }
+
+    @media (max-width: 768px) {
+        .delete-container {
+            margin: 0 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="delete-container">
+        <h1 class="delete-title">确认删除</h1>
+        <p class="delete-message">
+            你确定要删除文章 "<span class="article-title">{{ article.title }}</span>" 吗？
+            <br>
+            此操作不可撤销。
+        </p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="delete-actions">
+                <a href="{% url 'article_detail' article.slug %}" class="btn btn-secondary">取消</a>
+                <button type="submit" class="btn btn-danger">确认删除</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 

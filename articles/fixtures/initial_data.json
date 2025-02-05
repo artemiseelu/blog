@@ -1,0 +1,27 @@
+[
+    {
+        "model": "articles.category",
+        "pk": 1,
+        "fields": {
+            "name": "技术",
+            "description": "技术相关文章",
+            "created_time": "2024-03-20T12:00:00Z"
+        }
+    },
+    {
+        "model": "articles.article",
+        "pk": 1,
+        "fields": {
+            "title": "示例文章",
+            "slug": "example-article",
+            "author": 1,
+            "category": 1,
+            "content": "这是一篇示例文章的内容...",
+            "summary": "示例文章摘要",
+            "status": "published",
+            "created_time": "2024-03-20T12:00:00Z",
+            "updated_time": "2024-03-20T12:00:00Z",
+            "published_time": "2024-03-20T12:00:00Z"
+        }
+    }
+] 

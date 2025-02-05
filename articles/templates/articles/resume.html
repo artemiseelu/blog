@@ -1,0 +1,440 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}个人简历 - Arte{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+    /* 基础样式 */
+    body {
+        background: #f8f9fa;
+        margin: 0;
+        min-height: 100vh;  /* 确保最小高度占满视口 */
+    }
+
+    /* 简历整体容器 */
+    .resume-wrapper {
+        position: relative;
+        /* max-width: 1400px; */  /* 移除最大宽度限制 */
+        margin: 30px 10px 2rem;  /* 上30px，左右10px，下2rem */
+        padding: 0 2rem;  /* 左右内边距2rem */
+        display: block;
+    }
+
+    /* 左侧边栏 */
+    .sidebar {
+        position: fixed;  /* 固定定位 */
+        left: max(2rem, calc((100% - 1400px) / 2 + 2rem));  /* 动态计算左侧位置 */
+        top: calc(var(--header-height) + 15px);  /* 顶部位置：头部高度 + 15px */
+        width: 300px;  /* 固定宽度 */
+        background: #2d3436;  /* 深色背景 */
+        color: white;
+        padding: 2rem;
+        border-radius: 15px;  /* 圆角 */
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);  /* 阴影效果 */
+        height: calc(100vh - var(--header-height) - 15px - 2rem);  /* 动态计算高度 */
+        overflow-y: auto;  /* 内容溢出时显示滚动条 */
+    }
+
+    /* 主内容区域 */
+    .main-content {
+        position: relative;
+        margin: 0;
+        margin-left: 200px;  /* 减小额外的间距到 30px */
+        background: rgb(197, 87, 87);
+        border-radius: 15px;
+        padding: 2rem 3rem 2rem 2rem; /* 文本上右下左内边距 */
+        box-shadow: 0 4px 15px rgba(219, 253, 65, 0.1);
+        /* min-height: calc(100vh - var(--header-height) - 15px - 2rem); */
+        min-height: calc(100vh - var(--header-height));
+        }
+
+    /* 头像样式 - 调小尺寸 */
+    .avatar {
+        width: 140px;  /* 从180px减小到140px */
+        height: 140px;
+        border-radius: 50%;
+        margin: 0 auto 1.5rem;  /* 减小底部边距 */
+        display: block;
+        object-fit: cover;
+        border: 3px solid #3498db;  /* 边框也适当减小 */
+        box-shadow: 0 0 15px rgba(52, 152, 219, 0.3);
+    }
+
+    /* 联系信息区域 - 减小间距 */
+    .contact-info {
+        margin-bottom: 1.5rem;  /* 从2.5rem减小到1.5rem */
+        text-align: center;
+    }
+
+    /* 姓名样式 - 调小字号 */
+    .contact-info h2 {
+        color: #3498db;
+        font-size: 1.4rem;  /* 从1.8rem减小到1.4rem */
+        margin-bottom: 0.3rem;  /* 减小边距 */
+        font-weight: 700;
+    }
+
+    /* 职位描述 - 调小字号和间距 */
+    .contact-info > p {
+        color: #ecf0f1;
+        font-size: 0.95rem;  /* 从1.1rem减小到0.95rem */
+        margin-bottom: 1.5rem;  /* 从2rem减小到1.5rem */
+    }
+
+    /* 联系方式详情容器 - 减小间距 */
+    .contact-details {
+        border-top: 1px solid rgba(52, 152, 219, 0.3);  /* 边框变细 */
+        padding-top: 1rem;  /* 从1.5rem减小到1rem */
+    }
+
+    /* 单个联系方式项 - 调小尺寸 */
+    .contact-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.8rem;  /* 从1rem减小到0.8rem */
+        color: #ecf0f1;
+        padding: 0.4rem;  /* 从0.5rem减小到0.4rem */
+        font-size: 0.9rem;  /* 添加字号控制 */
+        transition: all 0.3s ease;
+    }
+
+    /* 联系方式悬停效果 */
+    .contact-item:hover {
+        background: rgba(52, 152, 219, 0.1);
+        border-radius: 8px;
+    }
+
+    /* 联系方式图标 - 调小尺寸 */
+    .contact-item i {
+        width: 20px;  /* 从24px减小到20px */
+        margin-right: 10px;  /* 从12px减小到10px */
+        color: #3498db;
+        font-size: 1rem;  /* 从1.1rem减小到1rem */
+    }
+
+    /* 技能区域 - 减小间距 */
+    .skills-section {
+        border-top: 1px solid rgba(52, 152, 219, 0.3);  /* 边框变细 */
+        padding-top: 1rem;  /* 从1.5rem减小到1rem */
+    }
+
+    /* 技能标题 - 调小字号 */
+    .skills-section h3 {
+        color: #3498db;
+        font-size: 1.1rem;  /* 从1.3rem减小到1.1rem */
+        margin-bottom: 1.2rem;  /* 从1.5rem减小到1.2rem */
+        text-align: center;
+    }
+
+    /* 单个技能项 - 减小间距 */
+    .skill-item {
+        margin-bottom: 1rem;  /* 从1.5rem减小到1rem */
+    }
+
+    /* 技能名称和百分比 - 调小字号 */
+    .skill-name {
+        color: #ecf0f1;
+        margin-bottom: 0.5rem;  /* 从0.8rem减小到0.5rem */
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;  /* 从1rem减小到0.9rem */
+    }
+
+    /* 技能进度条 - 调小高度 */
+    .skill-bar {
+        height: 4px;  /* 从6px减小到4px */
+        background: rgba(236, 240, 241, 0.1);
+        border-radius: 2px;
+        overflow: hidden;
+    }
+
+    .skill-level {
+        height: 100%;
+        background: #3498db;
+        border-radius: 2px;
+        transition: width 1s ease-in-out;
+    }
+
+    /* 内容区域各部分 */
+    .section {
+        margin-bottom: 3rem;
+    }
+
+    .section:last-child {
+        margin-bottom: 0;  /* 最后一个部分不需要底部边距 */
+    }
+
+    /* 各部分标题 */
+    .section-title {
+        font-size: 1.8rem;
+        color: #2d3436;
+        margin-bottom: 2rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #2d3436;
+    }
+
+    /* 经历项样式 */
+    .experience-item {
+        position: relative;
+        padding-left: 2rem;  /* 为时间轴留出空间 */
+        margin-bottom: 2.5rem;
+    }
+
+    /* 时间轴圆点 */
+    .experience-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 8px;
+        width: 10px;
+        height: 10px;
+        background: #2d3436;
+        border-radius: 50%;
+    }
+
+    /* 经历标题行 */
+    .experience-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    /* 公司/学校名称 */
+    .company-name {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #2d3436;
+    }
+
+    /* 职位/学位 */
+    .job-title {
+        display: block;
+        color: #666;
+        font-size: 1rem;
+        margin-top: 0.3rem;
+    }
+
+    /* 时间段 */
+    .period {
+        color: #666;
+        font-size: 0.9rem;
+        white-space: nowrap;
+        margin-left: 1rem;
+    }
+
+    /* 描述列表 */
+    .description-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    /* 描述列表项 */
+    .description-list li {
+        position: relative;
+        padding-left: 1.2rem;
+        margin-bottom: 0.8rem;
+        color: #444;
+        line-height: 1.6;
+    }
+
+    /* 描述列表项前的圆点 */
+    .description-list li::before {
+        content: '•';
+        position: absolute;
+        left: 0;
+        color: #2d3436;
+    }
+
+    /* 技术标签 */
+    .tech-tag {
+        background: #2d3436;
+        color: white;
+        padding: 0.3rem 1rem;
+        border-radius: 15px;
+        font-size: 0.9rem;
+    }
+
+    /* 项目经验样式 */
+    .project-item {
+        margin-bottom: 2.5rem;
+    }
+
+    /* 项目标题行 */
+    .project-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    /* 项目名称 */
+    .project-name {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #2d3436;
+    }
+
+    /* 项目描述 */
+    .project-description {
+        color: #444;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    /* 技术标签容器 */
+    .technologies {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    /* 个人简介段落 */
+    .summary-section p {
+        color: #444;
+        line-height: 1.8;
+    }
+
+    /* 响应式布局 */
+    @media (max-width: 768px) {
+        .resume-wrapper {
+            padding: 1rem;
+        }
+
+        /* 移动端侧边栏样式 */
+        .sidebar {
+            position: relative;
+            left: auto;
+            top: auto;
+            width: auto;
+            height: auto;
+            margin-bottom: 5px;
+        }
+
+        /* 移动端主内容区域样式 */
+        .main-content {
+            margin-left: 0;
+            padding: 2rem;
+        }
+
+        /* 移动端内容宽度 */
+        .section {
+            max-width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="resume-wrapper">
+    <aside class="sidebar">
+        <img src="{% static personal_info.avatar %}" alt="{{ personal_info.name }}" class="avatar">
+        
+        <div class="contact-info">
+            <h2>{{ personal_info.name }}</h2>
+            <p>{{ personal_info.title }}</p>
+            <div class="contact-details">
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>{{ personal_info.email }}</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <span>{{ personal_info.phone }}</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>{{ personal_info.location }}</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fab fa-github"></i>
+                    <a href="{{ personal_info.github }}" target="_blank">GitHub</a>
+                </div>
+                <div class="contact-item">
+                    <i class="fab fa-linkedin"></i>
+                    <a href="{{ personal_info.linkedin }}" target="_blank">LinkedIn</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="skills-section">
+            <h3>技能专长</h3>
+            {% for skill in skills %}
+            <div class="skill-item">
+                <div class="skill-name">
+                    <span>{{ skill.name }}</span>
+                    <span>{{ skill.level }}%</span>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-level" style="width: {{ skill.level }}%"></div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <section class="section summary-section">
+            <h2 class="section-title">个人简介</h2>
+            <p>{{ personal_info.summary }}</p>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">工作经历</h2>
+            {% for exp in experience %}
+            <div class="experience-item">
+                <div class="experience-header">
+                    <div>
+                        <span class="company-name">{{ exp.company }}</span>
+                        <span class="job-title">{{ exp.title }}</span>
+                    </div>
+                    <span class="period">{{ exp.period }}</span>
+                </div>
+                <ul class="description-list">
+                    {% for item in exp.description %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">项目经验</h2>
+            {% for project in projects %}
+            <div class="project-item">
+                <div class="project-header">
+                    <span class="project-name">{{ project.name }}</span>
+                    <span class="period">{{ project.period }}</span>
+                </div>
+                <p class="project-description">{{ project.description }}</p>
+                <div class="technologies">
+                    {% for tech in project.technologies %}
+                    <span class="tech-tag">{{ tech }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">教育背景</h2>
+            {% for edu in education %}
+            <div class="experience-item">
+                <div class="experience-header">
+                    <div>
+                        <span class="company-name">{{ edu.school }}</span>
+                        <span class="job-title">{{ edu.degree }}</span>
+                    </div>
+                    <span class="period">{{ edu.period }}</span>
+                </div>
+                <p class="project-description">{{ edu.description }}</p>
+            </div>
+            {% endfor %}
+        </section>
+    </main>
+</div>
+{% endblock %} 
