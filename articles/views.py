@@ -283,6 +283,7 @@ def resume(request):
     }
     return render(request, 'articles/resume.html', context)
 
+'''
 def resume2(request, lang='cn'):
     if lang == 'en':
         context = {
@@ -336,6 +337,21 @@ def resume2(request, lang='cn'):
                 'education': '教育背景',
             },
         }
+    
+    context['current_lang'] = lang
+    return render(request, 'articles/resume2.html', context)
+'''  
+
+# blog/articles/views.py
+
+#from django.shortcuts import render
+from articles.resume_data import resume_data_cn, resume_data_en
+
+def resume2(request, lang='cn'):
+    if lang == 'en':
+        context = resume_data_en
+    else:
+        context = resume_data_cn
     
     context['current_lang'] = lang
     return render(request, 'articles/resume2.html', context)
