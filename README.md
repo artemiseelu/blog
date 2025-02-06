@@ -2,8 +2,8 @@
 
 # Blog_101
 
-[简体中文](readme/README.zh_CN.md)       
-[English](README.md)
+[简体中文](README.md)       
+[English](README_EN.md)
 
   
 感谢cursor，虽然我们也经常鸡同鸭讲，但没有你就没有这个速成项目hhh
