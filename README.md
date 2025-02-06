@@ -6,7 +6,7 @@
 [English](README.md)
 
   
-本项目为与
+感谢cursor，虽然我们也经常鸡同鸭讲，但没有你就没有这个速成项目hhh
    
   ## 目录
   
@@ -169,20 +169,15 @@
   
   ### TODO
   
-  - [ ] zz 
+  - [ ]  
   
   ### 作者
   
   xxx@xxxx
      
-  
-  
-  ### 版权说明
-  
-  该项目签署了MIT 授权许可，详情请参阅 [LICENSE.txt](https://github.com/shaojintian/Best_README_template/blob/master/LICENSE.txt)
+
   
   ### 鸣谢
-  
-  - [Cursor](https://www.webpagefx.com/tools/emoji-cheat-sheet) 虽然我们也
+
 
   
