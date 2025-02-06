@@ -33,7 +33,7 @@
   1. 克隆该项目
   
   ```sh
-  git clone https://github.com/shaojintian/    Best_README_template.git
+  git clone https://github.com/artemiseelu/blog.git
   ```
   2. 创建并激活虚拟环境
   ```sh
